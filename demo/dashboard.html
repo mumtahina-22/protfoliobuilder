@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>Dynamic CV Builder</title>
+  <style>
+    .layout {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 25%;
+      background-color: #f4f4f4;
+      padding: 2rem;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .item-container {
+      margin-bottom: 1rem;
+    }
+
+    .item-container .item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .label-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Push the button to the right */
+  margin-bottom: 1rem;
+}
+
+.label-container label {
+  margin: 0; /* Remove default margin for proper alignment */
+  font-weight: bold;
+}
+
+.add-button, .remove-button {
+  background-color: #eab305;
+  color: white;
+  border: none;
+  font-size: 1rem; /* Reduced font size */
+  padding: 0.2rem 0.5rem; /* Adjusted padding for a smaller button */
+  border-radius: 50%; /* Keeps the circular shape */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 22px; /* Added fixed width for uniformity */
+  height: 22px; /* Added fixed height for uniformity */
+  display: flex; /* Aligns icon or text */
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button:hover {
+  background-color: black;
+  transform: scale(1.1); /* Slight zoom on hover for better UX */
+}
+.remove-button {
+  background-color: red; /* Default for remove button */
+}
+
+
+.remove-button:hover {
+  background-color: darkred;
+}
+
+
+    .content {
+      flex: 1;
+      padding: 2rem;
+      background-color: white;
+      overflow-y: auto;
+    }
+    .template1, .template2 {
+      padding: 2rem;
+    }
+
+    .template2 .header {
+      color: black;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+
+    .template1 .header{
+      background-color: #002147;
+      color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .template1 .skills, .template1 .education, .template1 .experience, .template1 .contact {
+    padding: 0 2rem;
+    margin-top:30px ;
+}
+
+    ul {
+      padding: 20px;
+    }
+    div#content-area h3 {
+    font-size: 25px;
+    border-bottom: 2px solid;
+    width: 3%;
+}
+
+    ul#display-contact li {
+    display: inline-block;
+    padding-right: 70px;
+}
+
+.button {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    /* font-weight: bold; */
+    border-radius: 5px;
+    transition: transform 0.3s, background 0.3s, color 0.3s;
+    cursor: pointer;
+    border: none;
+    background-color: #eab305;
+    color: black;
+    margin-top: 30px;
+    width: 100%;
+    text-transform: uppercase;
+  }
+
+  .button:hover {
+    background-color: #ffcc29;
+    color: black;
+    opacity: 0.8;
+  }
+
+  button#download-pdf {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: transform 0.3s, background 0.3s, color 0.3s;
+    cursor: pointer;
+    border: none;
+    background-color: #eab305;
+    color: black;
+    padding: 6px;
+    margin-left: 31px;
+}
+
+.template2 .contact {
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    margin-bottom: 25px;
+}
+
+.template2 .contact ul {
+    padding: 10px;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>CV Builder</h2>
+
+    <label for="template">Select Template</label>
+    <select id="template">
+      <option value="template1">Template 1</option>
+      <option value="template2">Template 2</option>
+    </select>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <label for="about">About</label>
+    <input type="text" id="position" placeholder="Enter your position">
+    <textarea id="about" rows="3" placeholder="Tell us about yourself"></textarea>
+
+    <label>Contact</label>
+    <div id="contact-container" class="item-container">
+      <div class="item">
+        <input type="text" placeholder="Email" class="contact-input">
+      </div>
+      <div class="item">
+        <input type="text" placeholder="Phone" class="contact-input">
+      </div>
+      <div class="item">
+        <input type="text" placeholder="Address" class="contact-input">
+      </div>
+      <div class="item">
+        <input type="text" placeholder="LinkedIn" class="contact-input">
+      </div>
+    </div>
+
+    <div class="label-container">
+        <label>Skills</label>
+        <button type="button" class="add-button" onclick="addItem('skills-container', 'Skill')">+</button>
+      </div>
+      <div id="skills-container" class="item-container"></div>
+      
+      <div class="label-container">
+    <label>Education</label>  
+    <button type="button" class="add-button" onclick="addItem('education-container', 'Education')">+</button>
+</div>
+<div id="education-container" class="item-container"></div>
+<div class="label-container">
+    <label>Experience</label> 
+    <button type="button" class="add-button" onclick="addItem('experience-container', 'Experience')">+</button>
+</div>
+<div id="experience-container" class="item-container"></div>
+
+
+    <button onclick="saveData()" class="button">Save</button>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content" id="content-area">
+    <div class="pdf">
+        <button id="download-pdf" class="download">Download</button>
+    </div>
+    
+
+    <div id="template1" class="template1">
+      <div class="header">
+        <h1 id="display-name">Your Name</h1>
+        <h2 id="position">About Me</h2>
+        <p id="display-about">About yourself will appear here.</p>
+      </div>
+      <div class="contact">
+        <ul id="display-contact"></ul>
+      </div>
+      <div class="skills">
+        <h3>Skills</h3>
+        <ul id="display-skills"></ul>
+      </div>
+      <div class="education">
+        <h3>Education</h3>
+        <ul id="display-education"></ul>
+      </div>
+      <div class="experience">
+        <h3>Experience</h3>
+        <ul id="display-experience"></ul>
+      </div>
+    </div>
+
+    <div id="template2" class="template2">
+        <div class="header">
+            <h1 id="display-name">Your Name</h1>
+            <h2 id="position">About Me</h2>
+            <p id="display-about">About yourself will appear here.</p>
+          </div>
+          <div class="contact">
+            <ul id="display-contact"></ul>
+          </div>
+          <div class="skills">
+            <h3>Skills</h3>
+            <ul id="display-skills"></ul>
+          </div>
+          <div class="education">
+            <h3>Education</h3>
+            <ul id="display-education"></ul>
+          </div>
+          <div class="experience">
+            <h3>Experience</h3>
+            <ul id="display-experience"></ul>
+          </div>
+          
+    </div>
+  </div>
+</div>
+
+<script>
+    document.getElementById('download-pdf').addEventListener('click', function () {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+  
+      // Get content from the fields and display sections
+      const name = document.getElementById('display-name').textContent || 'Your Name';
+      const position = document.getElementById('position').textContent || 'About Me';
+      const about = document.getElementById('display-about').textContent || 'About yourself will appear here.';
+      const skills = Array.from(document.querySelectorAll('#display-skills li')).map(li => li.textContent).join(', ');
+      const education = Array.from(document.querySelectorAll('#display-education li')).map(li => li.textContent).join(', ');
+      const experience = Array.from(document.querySelectorAll('#display-experience li')).map(li => li.textContent).join(', ');
+      const contact = Array.from(document.querySelectorAll('#display-contact li')).map(li => li.textContent).join(', ');
+  
+      // Add content to the PDF
+      doc.setFontSize(20);
+      doc.text("CV Document", 14, 20);
+  
+      doc.setFontSize(12);
+      doc.text(`Name: ${name}`, 14, 30);
+      doc.text(`Position: ${position}`, 14, 40);
+  
+      doc.text("About Me:", 14, 50);
+      doc.text(about, 14, 55, { maxWidth: 180 });
+  
+      doc.text("Skills:", 14, 75);
+      doc.text(skills, 14, 80, { maxWidth: 180 });
+  
+      doc.text("Education:", 14, 100);
+      doc.text(education, 14, 105, { maxWidth: 180 });
+  
+      doc.text("Experience:", 14, 125);
+      doc.text(experience, 14, 130, { maxWidth: 180 });
+  
+      doc.text("Contact Information:", 14, 150);
+      doc.text(contact, 14, 155, { maxWidth: 180 });
+  
+      // Save the PDF
+      doc.save("CV_Document.pdf");
+    });
+  </script>
+  
+  
+
+
+<script>
+function getContactIcon(type) {
+    // Map contact types to icons (can be font-awesome or similar)
+    const icons = {
+      email: '📧', // Replace with a font-awesome class or an image
+      phone: '📞',
+      address: '🏠',
+      linkedin: '🔗',
+    };
+
+    return icons[type.toLowerCase()] || 'ℹ️'; // Default icon
+  }
+
+    function addItem(containerId, placeholder) {
+      const container = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.classList.add('item');
+      div.innerHTML = `
+        <input type="text" placeholder="${placeholder}">
+        <button type="button" class="remove-button" onclick="removeItem(this)">x</button>
+      `;
+      container.appendChild(div);
+    }
+  
+    function removeItem(button) {
+      button.parentElement.remove();
+    }
+  
+    function saveData() {
+      const name = document.getElementById('name').value;
+      const position = document.getElementById('position').value;
+      const about = document.getElementById('about').value;
+      const skills = Array.from(document.querySelectorAll('#skills-container input')).map(input => input.value);
+      const education = Array.from(document.querySelectorAll('#education-container input')).map(input => input.value);
+      const experience = Array.from(document.querySelectorAll('#experience-container input')).map(input => input.value);
+       const contact = Array.from(document.querySelectorAll('.contact-input')).map(input => {
+      const placeholder = input.placeholder.toLowerCase();
+      return { type: placeholder, value: input.value };
+    });
+  
+      const data = { name, position, about, skills, education, experience, contact };
+      localStorage.setItem('cvData', JSON.stringify(data));
+      updatePreview(); // Update the content in both templates
+    }
+  
+    function updatePreview() {
+      const data = JSON.parse(localStorage.getItem('cvData')) || {
+        name: 'Your Name',
+        position: 'Your Position',
+        about: 'About yourself will appear here.',
+        skills: [],
+        education: [],
+        experience: [],
+        contact: []
+      };
+  
+      // Shared content update for both templates
+      document.querySelectorAll('#display-name').forEach(el => (el.textContent = data.name));
+      document.querySelectorAll('#position').forEach(el => (el.textContent = data.position));
+      document.querySelectorAll('#display-about').forEach(el => (el.textContent = data.about));
+      document.querySelectorAll('#display-skills').forEach(el => {
+        el.innerHTML = data.skills.map(skill => `<li>${skill.trim()}</li>`).join('');
+      });
+      document.querySelectorAll('#display-education').forEach(el => {
+        el.innerHTML = data.education.map(edu => `<li>${edu.trim()}</li>`).join('');
+      });
+      document.querySelectorAll('#display-experience').forEach(el => {
+        el.innerHTML = data.experience.map(exp => `<li>${exp.trim()}</li>`).join('');
+      });
+      document.querySelectorAll('#display-contact').forEach(el => {
+      el.innerHTML = data.contact
+        .map(contact => {
+          const icon = getContactIcon(contact.type);
+          return `<li>${icon} ${contact.value}</li>`;
+        })
+        .join('');
+    });
+    }
+  
+    // Template Selection
+    document.getElementById('template').addEventListener('change', function () {
+      const selectedTemplate = this.value;
+  
+      // Hide all templates and show only the selected one
+      document.querySelectorAll('.template1, .template2').forEach(template => {
+        template.style.display = 'none';
+      });
+      document.getElementById(selectedTemplate).style.display = 'block';
+  
+      // Update content for the newly selected template
+      updatePreview();
+    });
+  
+    // Ensure only one template is visible on page load
+    window.onload = () => {
+      const selectedTemplate = document.getElementById('template').value;
+  
+      // Hide all templates
+      document.querySelectorAll('.template1, .template2').forEach(template => {
+        template.style.display = 'none';
+      });
+  
+      // Show the default selected template
+      document.getElementById(selectedTemplate).style.display = 'block';
+  
+      // Update the preview content for the default template
+      updatePreview();
+    };
+  </script>
+  
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  
+  
+</body>
+</html>
+
+
+
+
+
+

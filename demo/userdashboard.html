@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio and CV Generator</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Portfolio & CV</h1>
+        <form id="user-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="profession">Profession/Title:</label>
+            <input type="text" id="profession" name="profession" placeholder="Enter your profession" required>
+
+            <label for="info">About You:</label>
+            <textarea id="info" name="info" placeholder="Write a short bio" required></textarea>
+
+            <label for="skills">Skills (comma-separated):</label>
+            <input type="text" id="skills" name="skills" placeholder="e.g., JavaScript, Python, HTML">
+
+            <label for="template">Choose Template:</label>
+            <select id="template" name="template">
+                <option value="portfolio1.html">Portfolio Template 1</option>
+                <option value="portfolio2.html">Portfolio Template 2</option>
+                <option value="cv.html">Generate CV</option>
+            </select>
+
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>

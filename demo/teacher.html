@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Teacher Portfolio</title>
+  <style>
+    /* General Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Source Sans 3", sans-serif;
+      background-color: white;
+      color: black;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #eab305;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    form input, form textarea, form select {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    form input:focus, form textarea:focus, form select:focus {
+      border-color: #eab305;
+      outline: none;
+      box-shadow: 0 0 5px rgba(234, 179, 5, 0.5);
+    }
+
+    .add-button {
+      background-color: #eab305;
+      color: black;
+      border: none;
+      font-size: 1.5rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .add-button:hover {
+      background-color: black;
+      color: white;
+    }
+
+    .item-container {
+      margin-bottom: 1rem;
+    }
+
+    .item-container .item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-container .item input {
+      flex-grow: 1;
+    }
+
+    .item-container .remove-button {
+      background-color: red;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .item-container .remove-button:hover {
+      background-color: darkred;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    button#save-btn {
+      background-color: #eab305;
+      color: black;
+    }
+
+    button#save-btn:hover {
+      background-color: black;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    button#generate-cv-btn {
+      background-color: black;
+      color: white;
+      margin-top: 1rem;
+    }
+
+    button#generate-cv-btn:hover {
+      background-color: #eab305;
+      color: black;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Teacher Portfolio</h1>
+    <form id="portfolio-form">
+      <label for="about">About Me</label>
+      <textarea id="about" rows="3"></textarea>
+
+      <label for="specialization">Subject Specialization</label>
+      <select id="specialization">
+        <option value="Mathematics">Mathematics</option>
+        <option value="English">English</option>
+        <option value="Science">Science</option>
+        <option value="History">History</option>
+        <option value="Geography">Geography</option>
+        <option value="Music">Music</option>
+        <option value="Art">Art</option>
+        <option value="Physical Education">Physical Education</option>
+      </select>
+
+      <label>Education</label>
+      <div id="education-container" class="item-container">
+        <!-- Education items will be added here dynamically -->
+      </div>
+      <button type="button" class="add-button" onclick="addItem('education-container', 'Education')">+</button>
+
+      <label>Experience</label>
+      <div id="experience-container" class="item-container">
+        <!-- Experience items will be added here dynamically -->
+      </div>
+      <button type="button" class="add-button" onclick="addItem('experience-container', 'Experience')">+</button>
+
+      <label>Skills</label>
+      <div id="skills-container" class="item-container">
+        <!-- Skills items will be added here dynamically -->
+      </div>
+      <button type="button" class="add-button" onclick="addItem('skills-container', 'Skill')">+</button>
+
+      <label for="contact-email">Contact Email</label>
+      <input type="email" id="contact-email">
+
+      <label for="contact-phone">Contact Phone</label>
+      <input type="text" id="contact-phone">
+
+      <label for="availability">Availability</label>
+      <textarea id="availability" rows="2" placeholder="List your availability for teaching"></textarea>
+
+      <button type="submit" id="save-btn">Save Changes</button>
+      <button type="button" id="generate-cv-btn">Generate CV</button>
+    </form>
+  </div>
+
+  <script>
+    function addItem(containerId, placeholder) {
+      const container = document.getElementById(containerId);
+      const item = document.createElement('div');
+      item.classList.add('item');
+      item.innerHTML = `
+        <input type="text" placeholder="${placeholder}">
+        <button type="button" class="remove-button" onclick="removeItem(this)">x</button>
+      `;
+      container.appendChild(item);
+    }
+
+    function removeItem(button) {
+      button.parentElement.remove();
+    }
+
+    function loadPortfolio() {
+      const portfolio = JSON.parse(localStorage.getItem('teacherPortfolio')) || {};
+
+      document.getElementById('about').value = portfolio.about || '';
+      document.getElementById('specialization').value = portfolio.specialization || '';
+      document.getElementById('contact-email').value = portfolio.contact?.email || '';
+      document.getElementById('contact-phone').value = portfolio.contact?.phone || '';
+      document.getElementById('availability').value = portfolio.availability || '';
+
+      addDynamicItems('education-container', portfolio.education || []);
+      addDynamicItems('experience-container', portfolio.experience || []);
+      addDynamicItems('skills-container', portfolio.skills || []);
+    }
+
+    function addDynamicItems(containerId, items) {
+      const container = document.getElementById(containerId);
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('item');
+        div.innerHTML = `
+          <input type="text" value="${item}">
+          <button type="button" class="remove-button" onclick="removeItem(this)">x</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function getItems(containerId) {
+      const container = document.getElementById(containerId);
+      return Array.from(container.querySelectorAll('input')).map(input => input.value);
+    }
+
+    document.getElementById('portfolio-form').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  // Collect updated portfolio data
+  const updatedPortfolio = {
+    about: document.getElementById('about').value,
+    specialization: document.getElementById('specialization').value,
+    education: getItems('education-container'),
+    experience: getItems('experience-container'),
+    skills: getItems('skills-container'),
+    contact: {
+      email: document.getElementById('contact-email').value,
+      phone: document.getElementById('contact-phone').value,
+    },
+    availability: document.getElementById('availability').value,
+  };
+
+  // Save data to localStorage
+  localStorage.setItem('teacherPortfolio', JSON.stringify(updatedPortfolio));
+
+  // Display a success message
+  alert('Portfolio saved successfully!');
+
+  // Redirect to the profile page
+  window.location.href = 'teacher-profile.html';
+});
+
+
+
+    document.getElementById('generate-cv-btn').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const about = document.getElementById('about').value;
+      const specialization = document.getElementById('specialization').value;
+      const education = getItems('education-container').join(', ');
+      const experience = getItems('experience-container').join(', ');
+      const skills = getItems('skills-container').join(', ');
+      const email = document.getElementById('contact-email').value;
+      const phone = document.getElementById('contact-phone').value;
+      const availability = document.getElementById('availability').value;
+
+      doc.setFontSize(20);
+      doc.text("Teacher Portfolio", 14, 20);
+      doc.setFontSize(12);
+      doc.text(`Specialization: ${specialization}`, 14, 30);
+      doc.text(`Contact: ${email} | ${phone}`, 14, 35);
+      doc.text("About Me:", 14, 45);
+      doc.text(about, 14, 50, { maxWidth: 180 });
+
+      doc.text("Education:", 14, 80);
+      doc.text(education, 14, 85, { maxWidth: 180 });
+
+      doc.text("Experience:", 14, 115);
+      doc.text(experience, 14, 120, { maxWidth: 180 });
+
+      doc.text("Skills:", 14, 150);
+      doc.text(skills, 14, 155, { maxWidth: 180 });
+
+      doc.text("Availability:", 14, 185);
+      doc.text(availability, 14, 190, { maxWidth: 180 });
+
+      doc.save("Teacher_Portfolio.pdf");
+    });
+
+    loadPortfolio();
+  </script>
+</body>
+</html>

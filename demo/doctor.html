@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #header {
+      background: url('default-bg.jpg') no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    #header .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #header .content {
+      z-index: 1;
+    }
+    .card {
+      margin: 20px auto;
+    }
+    .edit-btn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Doctor Portfolio</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#specialization">Specializations</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+          <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="#availability">Availability</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header id="header">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Dr. John Doe</h1>
+      <p>Experienced Healthcare Professional Specializing in General Medicine</p>
+      <!-- Edit Portfolio Button -->
+      <button class="btn btn-warning edit-btn" onclick="window.location.href='doctoredit.html'">Edit Portfolio</button>
+    </div>
+  </header>
+  <div class="container mt-5">
+    <h1>Doctor's Profile</h1>
+    <section id="about" class="mt-4">
+      <h3>About Me</h3>
+      <p id="about-info"></p>
+    </section>
+
+    <section id="specialization" class="mt-4">
+      <h3>Specialization</h3>
+      <p id="specialization-info"></p>
+    </section>
+
+    <section id="education" class="mt-4">
+      <h3>Education</h3>
+      <p id="education-info"></p>
+    </section>
+
+    <section id="experience" class="mt-4">
+      <h3>Experience</h3>
+      <p id="experience-info"></p>
+    </section>
+
+    <section id="availability" class="mt-4">
+      <h3>Availability</h3>
+      <p id="availability-info"></p>
+    </section>
+
+    <section id="contact" class="mt-4">
+      <h3>Contact</h3>
+      <p>Email: <span id="contact-email"></span></p>
+      <p>Phone: <span id="contact-phone"></span></p>
+    </section>
+  </div>
+
+  <script>
+    // Load data from localStorage and populate the page
+    function loadPortfolio() {
+      const portfolio = JSON.parse(localStorage.getItem('doctorPortfolio')) || {};
+
+      document.getElementById('about-info').textContent = portfolio.about || 'No information provided.';
+      document.getElementById('specialization-info').textContent = portfolio.specialization || 'No specialization provided.';
+      document.getElementById('education-info').textContent = portfolio.education || 'No education details provided.';
+      document.getElementById('experience-info').textContent = portfolio.experience || 'No experience details provided.';
+      document.getElementById('availability-info').textContent = portfolio.availability || 'No availability information provided.';
+      document.getElementById('contact-email').textContent = portfolio.contact?.email || 'No email provided.';
+      document.getElementById('contact-phone').textContent = portfolio.contact?.phone || 'No phone number provided.';
+    }
+
+    loadPortfolio();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

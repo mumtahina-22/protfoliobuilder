@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Banker Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* Include the same CSS from the original code */
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Edit Banker Portfolio</h1>
+    <form id="portfolio-form">
+      <div class="mb-3">
+        <label for="about" class="form-label">About Me</label>
+        <textarea id="about" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="bank" class="form-label">Bank Name</label>
+        <input type="text" id="bank" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="position" class="form-label">Position</label>
+        <input type="text" id="position" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="experience" class="form-label">Experience</label>
+        <textarea id="experience" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="contact-email" class="form-label">Contact Email</label>
+        <input type="email" id="contact-email" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="contact-phone" class="form-label">Contact Phone</label>
+        <input type="text" id="contact-phone" class="form-control">
+      </div>
+      <button type="submit" id="save-btn" class="btn btn-primary">Save Changes</button>
+      <button type="button" id="generate-pdf-btn" class="btn btn-secondary mt-3">Generate CV PDF</button>
+    </form>
+  </div>
+
+  <script>
+    // Adjust for Banker portfolio data
+    function loadPortfolio() {
+      const portfolio = JSON.parse(localStorage.getItem('bankerPortfolio')) || {
+        about: 'I am an experienced banker specializing in financial services and customer relations.',
+        bank: 'HSBC',
+        position: 'Relationship Manager',
+        experience: '5 years of experience in banking.',
+        contact: {
+          email: 'banker@example.com',
+          phone: '987-654-3210'
+        }
+      };
+      document.getElementById('about').value = portfolio.about;
+      document.getElementById('bank').value = portfolio.bank;
+      document.getElementById('position').value = portfolio.position;
+      document.getElementById('experience').value = portfolio.experience;
+      document.getElementById('contact-email').value = portfolio.contact.email;
+      document.getElementById('contact-phone').value = portfolio.contact.phone;
+    }
+
+    document.getElementById('portfolio-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const updatedPortfolio = {
+        about: document.getElementById('about').value,
+        bank: document.getElementById('bank').value,
+        position: document.getElementById('position').value,
+        experience: document.getElementById('experience').value,
+        contact: {
+          email: document.getElementById('contact-email').value,
+          phone: document.getElementById('contact-phone').value
+        }
+      };
+      localStorage.setItem('bankerPortfolio', JSON.stringify(updatedPortfolio));
+      window.location.href = 'banker-profile.html';
+    });
+
+    // Generate PDF
+    document.getElementById('generate-pdf-btn').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const portfolio = JSON.parse(localStorage.getItem('bankerPortfolio')) || {
+        about: 'I am an experienced banker specializing in financial services and customer relations.',
+        bank: 'HSBC',
+        position: 'Relationship Manager',
+        experience: '5 years of experience in banking.',
+        contact: {
+          email: 'banker@example.com',
+          phone: '987-654-3210'
+        }
+      };
+
+      doc.setFontSize(20);
+      doc.text('Banker Portfolio CV', 20, 20);
+      doc.setFontSize(12);
+      
+      doc.text(`Bank Name: ${portfolio.bank}`, 20, 30);
+      doc.text(`Position: ${portfolio.position}`, 20, 40);
+      doc.text(`Experience: ${portfolio.experience}`, 20, 50);
+      doc.text(`About Me: ${portfolio.about}`, 20, 60);
+      doc.text(`Contact Email: ${portfolio.contact.email}`, 20, 70);
+      doc.text(`Contact Phone: ${portfolio.contact.phone}`, 20, 80);
+      
+      doc.save('banker-portfolio.pdf');
+    });
+
+    loadPortfolio();
+  </script>
+</body>
+</html>

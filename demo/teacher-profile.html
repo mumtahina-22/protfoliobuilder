@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Professional Portfolio</title>
+  <style>
+      /* General Styles */
+      * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Source Sans 3", sans-serif;
+      background-color: #f6f6f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    nav {
+      background-color: black;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .navbar-brand {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #eab305;
+      text-decoration: none;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #eab305;
+    }
+
+    /* Header Section */
+    #header {
+      background: url('default-bg.jpg') center/cover no-repeat;
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    #header .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    #header .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #eab305;
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: black;
+    }
+
+    #header button {
+      padding: 0.8rem 1.5rem;
+      background-color: #eab305;
+      border: none;
+      font-size: 1rem;
+      font-weight: bold;
+      color: black;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    #header button:hover {
+      background-color: black;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 800px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    section h2 {
+      font-size: 2rem;
+      color: #eab305;
+      margin-bottom: 1rem;
+    }
+
+    section p {
+      margin-bottom: 1rem;
+    }
+
+    #skills-list, #project-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    #skills-list .skill, #project-list .project {
+      background-color: #f5f5f5;
+      padding: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      flex: 1 1 calc(33.333% - 1rem);
+      text-align: center;
+    }
+
+    #skills-list .skill:hover, #project-list .project:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    #contact span {
+      font-weight: bold;
+      color: #eab305;
+    }
+
+    .btn-secondary {
+      display: block;
+      text-align: center;
+      padding: 0.8rem 1.5rem;
+      margin: 1rem auto 0;
+      width: fit-content;
+      background-color: black;
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background-color: #eab305;
+      color: black;
+      transform: scale(1.05);
+    }
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-header {
+      background-color: #eab305;
+      padding: 1rem;
+      border-radius: 10px 10px 0 0;
+      color: black;
+      font-weight: bold;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .modal-body select {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .modal-body select:focus {
+      border-color: #eab305;
+      background-color: white;
+      outline: none;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .modal-footer button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-footer .btn-primary {
+      background-color: #eab305;
+      color: black;
+    }
+
+    .modal-footer .btn-secondary {
+      background-color: black;
+      color: white;
+    }
+
+    .modal-footer button:hover {
+      opacity: 0.9;
+    }
+
+    /* Overlay for Modal */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" class="navbar-brand">Portfolio</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <header id="header">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Hi, I'm a Professional</h1>
+      <p>Specializing in creating impactful solutions.</p>
+      <button onclick="openModal()">Edit Portfolio</button>
+    </div>
+  </header>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p id="about-content"></p>
+  </section>
+
+  <section id="projects">
+    <h2>Subject Specialization</h2>
+    <p id="specialization-content"></p>  
+  </section>
+
+  <section id="Education">
+    <h2>Education</h2>
+    <ul id="education-list"></ul> 
+  </section>
+
+  <section id="Experience">
+    <h2>Experience</h2>
+    <ul id="experience-list"></ul>
+  </section>
+
+  <section id="Skills">
+    <h2>Skills</h2>
+    <ul id="skills-list"></ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+      <div class="contact">
+        <div>
+          <strong>Email:</strong>
+          <p id="contact-email"></p>
+        </div>
+        <div>
+          <strong>Phone:</strong>
+          <p id="contact-phone"></p>
+        </div>
+      </div>
+  </section>
+
+  <div class="overlay" id="modal-overlay"></div>
+  <div class="modal" id="editModal">
+    <div class="modal-header">Select Profession</div>
+    <div class="modal-body">
+      <select id="professionSelect">
+        <option value="teacher">Teacher</option>
+        <option value="banker">Banker</option>
+        <option value="army">Army</option>
+        <option value="softwareengineer">Doctor</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Close</button>
+      <button class="btn-primary" onclick="saveProfession()">Save Changes</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById('editModal').classList.add('active');
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('editModal').classList.remove('active');
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+       function saveProfession() {
+      const selectedProfession = document.getElementById('professionSelect').value;
+
+      // Navigate to the corresponding profession page
+      switch (selectedProfession) {
+        case 'photographer':
+          window.location.href = 'photographer.html';
+          break;
+        case 'teacher':
+          window.location.href = 'teacher.html';
+          break;
+        case 'banker':
+          window.location.href = 'banker.html';
+          break;
+        case 'army':
+          window.location.href = 'army.html';
+          break;
+        case 'softwareengineer':
+          window.location.href = 'softwareengineer.html';
+          break;
+        case 'officeemployee':
+          window.location.href = 'officeemployee.html';
+          break;
+        case 'customercareservice':
+          window.location.href = 'customercareservice.html';
+          break;
+        case 'ngoemployee':
+          window.location.href = 'ngoemployee.html';
+          break;
+          case 'doctor':
+          window.location.href = 'doctor.html';
+          break;
+        default:
+          alert('Invalid profession selected.');
+          break;
+      }
+    }
+
+  </script>
+
+<script>
+  function loadPortfolio() {
+    // Retrieve portfolio data
+    const portfolio = JSON.parse(localStorage.getItem('teacherPortfolio')) || {};
+
+    // Populate content on the profile page
+    document.getElementById('about-content').textContent = portfolio.about || 'No information provided.';
+    document.getElementById('specialization-content').textContent = portfolio.specialization || 'No specialization provided.';
+
+    populateList('education-list', portfolio.education || []);
+    populateList('experience-list', portfolio.experience || []);
+    populateList('skills-list', portfolio.skills || []);
+
+    document.getElementById('contact-email').textContent = portfolio.contact?.email || 'Not provided';
+    document.getElementById('contact-phone').textContent = portfolio.contact?.phone || 'Not provided';
+  }
+
+  function populateList(elementId, items) {
+    const list = document.getElementById(elementId);
+    list.innerHTML = ''; // Clear existing items
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      list.appendChild(li);
+    });
+  }
+
+  // Call the loadPortfolio function when the page loads
+  document.addEventListener('DOMContentLoaded', loadPortfolio);
+</script>
+
+
+
+</body>
+</html>

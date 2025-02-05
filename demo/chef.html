@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Chef Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+    .form-label {
+      font-weight: bold;
+      color: #333;
+    }
+    .form-control {
+      border-radius: 4px;
+      border-color: #ddd;
+      margin-bottom: 15px;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: #28a745;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+    }
+    .btn-secondary:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Edit Chef Portfolio</h1>
+    <form id="portfolio-form">
+      <div class="mb-3">
+        <label for="about" class="form-label">About Me</label>
+        <textarea id="about" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="specialization" class="form-label">Cuisine Specialization</label>
+        <input type="text" id="specialization" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="restaurant" class="form-label">Restaurant</label>
+        <input type="text" id="restaurant" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="experience" class="form-label">Experience</label>
+        <textarea id="experience" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="contact-email" class="form-label">Contact Email</label>
+        <input type="email" id="contact-email" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="contact-phone" class="form-label">Contact Phone</label>
+        <input type="text" id="contact-phone" class="form-control">
+      </div>
+      <button type="submit" id="save-btn" class="btn btn-primary">Save Changes</button>
+      <button type="button" id="generate-pdf" class="btn btn-secondary">Generate CV PDF</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Retrieve and populate the form with stored data
+    function loadPortfolio() {
+      const portfolio = JSON.parse(localStorage.getItem('chefPortfolio')) || {
+        about: 'I am a professional chef with a passion for creating delicious and innovative dishes.',
+        specialization: 'French Cuisine',
+        restaurant: 'Le Gourmet',
+        experience: '10 years of experience in top-tier restaurants.',
+        contact: {
+          email: 'chef@example.com',
+          phone: '987-654-3210'
+        }
+      };
+      document.getElementById('about').value = portfolio.about;
+      document.getElementById('specialization').value = portfolio.specialization;
+      document.getElementById('restaurant').value = portfolio.restaurant;
+      document.getElementById('experience').value = portfolio.experience;
+      document.getElementById('contact-email').value = portfolio.contact.email;
+      document.getElementById('contact-phone').value = portfolio.contact.phone;
+    }
+
+    document.getElementById('portfolio-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const updatedPortfolio = {
+        about: document.getElementById('about').value,
+        specialization: document.getElementById('specialization').value,
+        restaurant: document.getElementById('restaurant').value,
+        experience: document.getElementById('experience').value,
+        contact: {
+          email: document.getElementById('contact-email').value,
+          phone: document.getElementById('contact-phone').value
+        }
+      };
+      localStorage.setItem('chefPortfolio', JSON.stringify(updatedPortfolio));
+      window.location.href = 'chef-profile.html';
+    });
+
+    document.getElementById('generate-pdf').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Fetch portfolio data
+      const portfolio = JSON.parse(localStorage.getItem('chefPortfolio')) || {
+        about: 'I am a professional chef with a passion for creating delicious and innovative dishes.',
+        specialization: 'French Cuisine',
+        restaurant: 'Le Gourmet',
+        experience: '10 years of experience in top-tier restaurants.',
+        contact: {
+          email: 'chef@example.com',
+          phone: '987-654-3210'
+        }
+      };
+
+      // Set up the PDF content with professional layout
+      doc.setFont('helvetica');
+      doc.setFontSize(18);
+      doc.text('Chef Portfolio', 14, 20);
+
+      doc.setFontSize(14);
+      doc.text('About Me:', 14, 40);
+      doc.setFontSize(12);
+      doc.text(portfolio.about, 14, 45, { maxWidth: 180 });
+
+      doc.setFontSize(14);
+      doc.text('Specialization:', 14, 70);
+      doc.setFontSize(12);
+      doc.text(portfolio.specialization, 14, 75);
+
+      doc.setFontSize(14);
+      doc.text('Restaurant:', 14, 100);
+      doc.setFontSize(12);
+      doc.text(portfolio.restaurant, 14, 105);
+
+      doc.setFontSize(14);
+      doc.text('Experience:', 14, 130);
+      doc.setFontSize(12);
+      doc.text(portfolio.experience, 14, 135, { maxWidth: 180 });
+
+      doc.setFontSize(14);
+      doc.text('Contact Info:', 14, 160);
+      doc.setFontSize(12);
+      doc.text('Email: ' + portfolio.contact.email, 14, 165);
+      doc.text('Phone: ' + portfolio.contact.phone, 14, 170);
+
+      doc.save('chef-portfolio.pdf');
+    });
+
+    loadPortfolio();
+  </script>
+</body>
+</html>

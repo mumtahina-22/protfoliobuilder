@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+  <title>Dynamic CV Builder</title>
+  <style>
+    body {
+      display: flex;
+      margin: 0;
+      font-family: "Source Sans 3", serif;
+      color: #333;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 25%;
+      background-color: #f4f4f4;
+      padding: 1.5rem 2rem; /* Added more space on left and right */
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .sidebar input, .sidebar textarea, .sidebar select {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .sidebar textarea {
+      resize: none;
+    }
+
+    .sidebar button {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sidebar button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Content Area Styling */
+    .content {
+      flex: 1;
+      padding: 2rem;
+      background-color: white;
+      overflow-y: auto;
+    }
+
+    .template1, .template2 {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1.5rem;
+    }
+
+    .template1 {
+      background-color: #fafafa;
+    }
+
+    .template2 {
+      background-color: #eef5ff;
+    }
+
+    h1, h2, h3 {
+      margin: 1rem 0 0.5rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>CV Builder</h2>
+
+    <label for="template">Select Template</label>
+    <select id="template">
+      <option value="template1">Template 1</option>
+      <option value="template2">Template 2</option>
+    </select>
+
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Enter your name">
+
+    <label for="about">About</label>
+    <textarea id="about" rows="3" placeholder="Tell us about yourself"></textarea>
+
+    <label for="skills">Skills (comma-separated)</label>
+    <input type="text" id="skills" placeholder="e.g., JavaScript, Python, React">
+
+    <label for="education">Education</label>
+    <textarea id="education" rows="3" placeholder="List your education"></textarea>
+
+    <label for="experience">Experience</label>
+    <textarea id="experience" rows="3" placeholder="List your experience"></textarea>
+
+    <label for="contact">Contact</label>
+    <textarea id="contact" rows="2" placeholder="Phone and email"></textarea>
+
+    <button onclick="saveData()">Save</button>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content" id="content-area">
+    <div id="template1" class="template1">
+      <h1 id="display-name">Your Name</h1>
+      <h2>About Me</h2>
+      <p id="display-about">About yourself will appear here.</p>
+      <h2>Skills</h2>
+      <ul id="display-skills"></ul>
+      <h2>Education</h2>
+      <p id="display-education">Your education details will appear here.</p>
+      <h2>Experience</h2>
+      <p id="display-experience">Your experience details will appear here.</p>
+      <h2>Contact</h2>
+      <p id="display-contact">Your contact details will appear here.</p>
+    </div>
+
+    <div id="template2" class="template2" style="display: none;">
+      <h1 id="display-name2">Your Name</h1>
+      <h2>About Me</h2>
+      <p id="display-about2">About yourself will appear here.</p>
+      <h2>Skills</h2>
+      <ul id="display-skills2"></ul>
+      <h2>Education</h2>
+      <p id="display-education2">Your education details will appear here.</p>
+      <h2>Experience</h2>
+      <p id="display-experience2">Your experience details will appear here.</p>
+      <h2>Contact</h2>
+      <p id="display-contact2">Your contact details will appear here.</p>
+    </div>
+  </div>
+
+  <script>
+    // Save data to localStorage and update the preview
+    function saveData() {
+      const name = document.getElementById("name").value;
+      const about = document.getElementById("about").value;
+      const skills = document.getElementById("skills").value.split(",");
+      const education = document.getElementById("education").value;
+      const experience = document.getElementById("experience").value;
+      const contact = document.getElementById("contact").value;
+
+      const data = { name, about, skills, education, experience, contact };
+      localStorage.setItem("cvData", JSON.stringify(data));
+      updatePreview();
+    }
+
+    // Update preview from localStorage
+    function updatePreview() {
+      const data = JSON.parse(localStorage.getItem("cvData")) || {
+        name: "Your Name",
+        about: "About yourself will appear here.",
+        skills: [],
+        education: "Your education details will appear here.",
+        experience: "Your experience details will appear here.",
+        contact: "Your contact details will appear here."
+      };
+
+      // Template 1
+      document.getElementById("display-name").textContent = data.name;
+      document.getElementById("display-about").textContent = data.about;
+      document.getElementById("display-skills").innerHTML = data.skills.map(skill => `<li>${skill.trim()}</li>`).join("");
+      document.getElementById("display-education").textContent = data.education;
+      document.getElementById("display-experience").textContent = data.experience;
+      document.getElementById("display-contact").textContent = data.contact;
+
+      // Template 2
+      document.getElementById("display-name2").textContent = data.name;
+      document.getElementById("display-about2").textContent = data.about;
+      document.getElementById("display-skills2").innerHTML = data.skills.map(skill => `<li>${skill.trim()}</li>`).join("");
+      document.getElementById("display-education2").textContent = data.education;
+      document.getElementById("display-experience2").textContent = data.experience;
+      document.getElementById("display-contact2").textContent = data.contact;
+    }
+
+    // Template Selection
+    document.getElementById("template").addEventListener("change", function () {
+      const selectedTemplate = this.value;
+      document.querySelectorAll(".template1, .template2").forEach(template => {
+        template.style.display = "none";
+      });
+      document.getElementById(selectedTemplate).style.display = "block";
+    });
+
+    // Load data on page load
+    window.onload = updatePreview;
+  </script>
+</body>
+</html>
